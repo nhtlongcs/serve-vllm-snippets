@@ -1,0 +1,30 @@
+{
+  "_notes": [
+    "Gemma 4 31B Instruct (dense). Source: model README at",
+    "~/spinning-storage/llm/gemma-4-31B-it/README.md.",
+    "Architecture: Gemma4ForConditionalGeneration; hybrid attention = 5x",
+    "sliding (window=1024) per 1x global, K=V on global layers + p-RoPE so",
+    "KV cache stays tiny even at 256k context. Reasoning is configurable;",
+    "vllm exposes the gemma4 reasoning parser.",
+    "Single A100 80GB sizing: ~62GB weights, ~18GB free. Empirically vLLM",
+    "needs ~12.7GB KV cache at 131072 ctx but only ~9.7GB is free post-",
+    "weights at gpu_memory_utilization=0.92, so we cap max_model_len at 90112",
+    "(just below vLLM's auto-suggested 91776 ceiling for this footprint).",
+    "vision_soft_tokens_per_image=280 (fixed regardless of resolution); image",
+    "count scales near-linearly with the remaining token budget."
+  ],
+  "model": "/home/tnguyenho/spinning-storage/llm/gemma-4-31B-it",
+  "served_model_name": "gemma4-31b-it",
+  "dtype": "bfloat16",
+  "tensor_parallel_size": 1,
+  "max_model_len": 90112,
+  "gpu_memory_utilization": 0.92,
+  "trust_remote_code": true,
+  "max_num_seqs": 8,
+  "enforce_eager": true,
+  "enable_prefix_caching": true,
+  "limit_mm_per_prompt": {"image": 64},
+  "server_extra_args": [
+    "--reasoning-parser", "gemma4"
+  ]
+}

@@ -9,6 +9,7 @@ Each subdirectory is a dated snapshot — an independent, runnable setup with it
 | Directory | Description |
 |---|---|
 | [20-May-2026](./20-May-2026/) | OpenAI-compatible vLLM server with CUDA 12.x support, managed via `uv` |
+| [11-Jun-2026](./11-Jun-2026/) | Config-driven vLLM launcher with multi-model support (Qwen3.6-27B, Gemma4-31B, Nemotron-Omni-30B) |
 
 ## Structure
 

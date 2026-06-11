@@ -1,0 +1,42 @@
+[project]
+name = "run-llm"
+version = "0.1.0"
+description = "Host LLM using vLLM with OpenAI-compatible API"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "vllm",
+]
+
+[project.scripts]
+run-llm = "main:main"
+
+[tool.uv]
+index-strategy = "unsafe-best-match"
+# The vllm cu129 nightly wheel is built against torch 2.10+ (c10::cuda symbol
+# signature changed there); 2.9.1 fails to link. cu128 PyTorch index tops out
+# at 2.9.1, so we point at cu129 for 2.11.0. PEP 440 ignores the +cu129 local
+# segment when matching ==2.11.0, so the override resolves to the cu129 wheel.
+override-dependencies = [
+    "torch==2.11.0",
+    "torchvision==0.26.0",
+    "torchaudio==2.11.0",
+]
+
+# torch: CUDA 12.9 PyTorch index (only index where torch 2.11.0 ships).
+[[tool.uv.index]]
+url = "https://download.pytorch.org/whl/cu129"
+name = "pytorch-cu129"
+explicit = true
+
+# vllm: cu129 nightly wheels — links libcudart.so.13 and the torch 2.11 c10 ABI.
+[[tool.uv.index]]
+url = "https://wheels.vllm.ai/nightly/cu129/"
+name = "vllm-cu129"
+explicit = true
+
+[tool.uv.sources]
+torch = { index = "pytorch-cu129" }
+torchvision = { index = "pytorch-cu129" }
+torchaudio = { index = "pytorch-cu129" }
+vllm = { index = "vllm-cu129" }

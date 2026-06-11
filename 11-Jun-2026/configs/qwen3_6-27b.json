@@ -1,0 +1,39 @@
+{
+  "_notes": [
+    "Qwen3.6-27B. Source: model README at",
+    "~/spinning-storage/llm/Qwen3.6-27B/README.md.",
+    "Vision-language model; arch=Qwen3_5ForConditionalGeneration, hybrid",
+    "Gated DeltaNet (3 of 4 layers) + Gated Attention (every 4th layer) so",
+    "KV cache is small relative to a dense transformer.",
+    "Model card recommends tp=8 for the full 262k context; on a single A100",
+    "80GB we keep the card-recommended 128k floor for thinking quality (it",
+    "explicitly says 'maintain >=128K tokens') and bump gpu_memory_utilization",
+    "to 0.92 to absorb KV cache + activations on top of ~54GB of weights.",
+    "Image tokens scale with resolution = (H*W) / (patch_size*spatial_merge)^2.",
+    "max_pixels=602112 (~776x776) caps each image at ~590 tokens; min_pixels",
+    "matches the card's 224^2 floor.",
+    "enforce_eager=true: torch.compile + CUDA-graph capture on this hybrid",
+    "arch added 5-15+ minutes of boot time with no perf win in our usage",
+    "(low concurrency, large weights bottleneck), so we skip them entirely."
+  ],
+  "model": "/home/tnguyenho/spinning-storage/llm/Qwen3.6-27B",
+  "served_model_name": "qwen3-6-27b",
+  "dtype": "bfloat16",
+  "tensor_parallel_size": 1,
+  "max_model_len": 131072,
+  "gpu_memory_utilization": 0.92,
+  "trust_remote_code": true,
+  "enforce_eager": true,
+  "max_num_seqs": 8,
+  "enable_prefix_caching": true,
+  "limit_mm_per_prompt": {"image": 64, "video": 1},
+  "mm_processor_kwargs": {
+    "min_pixels": 50176,
+    "max_pixels": 602112
+  },
+  "server_extra_args": [
+    "--reasoning-parser", "qwen3",
+    "--enable-auto-tool-choice",
+    "--tool-call-parser", "qwen3_coder"
+  ]
+}

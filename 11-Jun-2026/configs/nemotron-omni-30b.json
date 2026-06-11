@@ -1,0 +1,29 @@
+{
+  "_notes": [
+    "Nemotron-3 Nano Omni 30B-A3B Reasoning (BF16). Multimodal: image/video/audio.",
+    "Architecture: NemotronH_Nano_Omni_Reasoning_V3 (nano_nemotron_vl in vLLM).",
+    "Mamba2-Transformer hybrid MoE: 31B total params, ~3B active.",
+    "FP8 flag quantization fails on this GPU (MARLIN MoE kernel size mismatch). Running BF16 at 32k context.",
+    "--reasoning-parser nemotron_v3 required for thinking-mode output.",
+    "--tool-call-parser qwen3_coder recommended by model card.",
+    "Each image yields ~512 vision tokens (force_image_size=512, patch_size=16, downsample_ratio=0.5)."
+  ],
+  "model": "/home/tnguyenho/spinning-storage/llm/Nemotron-3-Nano-Omni-30B-A3B-Reasoning-BF16",
+  "served_model_name": "nemotron-nano-omni-30b",
+  "tensor_parallel_size": 1,
+  "max_model_len": 32768,
+  "gpu_memory_utilization": 0.92,
+  "trust_remote_code": true,
+  "max_num_seqs": 8,
+  "max_num_batched_tokens": 16384,
+  "enable_prefix_caching": true,
+  "enforce_eager": true,
+  "limit_mm_per_prompt": {"image": 32, "video": 1, "audio": 1},
+  "server_extra_args": [
+    "--reasoning-parser", "nemotron_v3",
+    "--enable-auto-tool-choice",
+    "--tool-call-parser", "qwen3_coder",
+    "--video-pruning-rate", "0.5",
+    "--media-io-kwargs", "{\"video\": {\"fps\": 2, \"num_frames\": 128}}"
+  ]
+}
